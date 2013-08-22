@@ -115,8 +115,8 @@ public class RobotTemplate extends IterativeRobot {
 	//robotDrive.tankDrive(joystickLeft.getY()*throttle, joystickRight.getY()*throttle);
 	if(heightLimitValue){
 	    robotDrive.arcadeDrive(
-		    controllerMcDeath.getRawAxis(JOYSICK_MOVEMENT_Y)*0.65*0.9*throttle, 
-		    controllerMcDeath.getRawAxis(JOYSTICK_MOVEMENT_X)*0.65*0.9*throttle
+		    controllerMcDeath.getRawAxis(JOYSICK_MOVEMENT_Y)*0.65*0.8*throttle, 
+		    controllerMcDeath.getRawAxis(JOYSTICK_MOVEMENT_X)*0.7*throttle
 		    );
 	}else{
 	    robotDrive.arcadeDrive(

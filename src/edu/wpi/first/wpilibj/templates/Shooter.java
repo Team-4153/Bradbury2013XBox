@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.can.CANTimeoutException;
  * @author 4153student
  */
 public class Shooter {
+    static final double SHOOTER_VOLTAGE = 5.5;//7.7
 
     Solenoid shooterRetract = new Solenoid(6);
     Solenoid shooterExtend = new Solenoid(5);
@@ -34,7 +35,7 @@ public class Shooter {
     public void update() {
 	try {
 	    if (wheelRun) {
-		shooterWheel.setX(7.7);
+		shooterWheel.setX(SHOOTER_VOLTAGE);
 	    } else {
 		shooterWheel.setX(0);
 	    }
