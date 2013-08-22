@@ -23,6 +23,8 @@ public class RobotTemplate extends IterativeRobot {
     static final int JOYSICK_MOVEMENT_Y = 2;//LEFT_ANALOG_Y
     static final int DPAD_X = 6;
     
+    static final double ELEVATOR_SPEED_RATIO = -0.8 ;
+    
     static final int A = 1;
     static final int B = 2;
     static final int X = 3;
@@ -187,7 +189,7 @@ public class RobotTemplate extends IterativeRobot {
 	try {
 	    if ((heightLimitValue && heightJoystick > 0) || 
 		    heightJoystick < 0){
-		heightMotor.setX(heightJoystick*-0.6);
+		heightMotor.setX(heightJoystick* ELEVATOR_SPEED_RATIO); 
 	}else 
 	    {
 		heightMotor.setX(0);
