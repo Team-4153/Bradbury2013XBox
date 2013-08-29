@@ -25,10 +25,10 @@ public class RobotTemplate extends IterativeRobot {
     
     static final double ELEVATOR_SPEED_RATIO = -0.8 ;
     
-    static final int A = 1;
-    static final int B = 2;
-    static final int X = 3;
-    static final int Y = 4;
+    static final int XBOX_A = 1;
+    static final int XBOX_B = 2;
+    static final int XBOX_X = 3;
+    static final int XBOX_Y = 4;
     static final int FIRE = 5;//LEFT_BUMPER
     static final int SHIFT = 6;//RIGHT_BUMPER
     static final int WHEEL_TOGGLE = 1;//BACK//No longer back, b/c it's on supervisor
@@ -36,10 +36,17 @@ public class RobotTemplate extends IterativeRobot {
     static final int LEFT_STICK_PRESS = 9;
     static final int RIGHT_STICK_PRESS = 10;
     
+    static final int MAIN_DRIVING_JOYSTICK = 1;
+    static final int SUPERVISOR_JOYSTICK = 2;
+    
+    
+
     Shooter shooter;
 
-    Joystick controllerMcDeath = new Joystick(1);
-    Joystick supervisorControl = new Joystick(2);
+    /* Main driving controller. */
+    Joystick controllerMcDeath = new Joystick(MAIN_DRIVING_JOYSTICK);
+    /* Throttle and whether the shooter wheel is running. */
+    Joystick supervisorControl = new Joystick(SUPERVISOR_JOYSTICK);
     
     CANJaguar leftDrive;
     CANJaguar rightDrive;
@@ -50,30 +57,29 @@ public class RobotTemplate extends IterativeRobot {
     RobotDrive robotDrive;
     Solenoid shiftUp = new Solenoid(2);
     Solenoid shiftDown = new Solenoid (1);
-    TCPComms comms = new TCPComms();
+    TCPComms comms;
     
     AnalogChannel tiltPot;
     AnalogChannel rotPot;
     DigitalInput heightLimit;
     
-    double throttle;
-    double tiltJoystick;
-    double tiltPotValue;
-    double heightJoystick;
-    double azimuthMotorValue;
+   // double throttle;
+    //double tiltJoystick;
+    //double tiltPotValue;
+    //double heightJoystick;
+    //double azimuthMotorValue;
     boolean shift;
     boolean previousTriggerValue;
-    boolean shiftTriggerValue;
+    //boolean shiftTriggerValue;
     boolean previousHeightLimitValue;
-    boolean heightLimitValue;
+    //boolean heightLimitValue;
     boolean previousWheelToggle;
-    boolean wheelToggle;
+    //boolean wheelToggle;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-	comms.init();
 	try {
 	    leftDrive = new CANJaguar(8);
 	    rightDrive = new CANJaguar(4);
@@ -81,7 +87,11 @@ public class RobotTemplate extends IterativeRobot {
 	    tiltMotor = new CANJaguar(5);
 	    azimuthMotor = new CANJaguar(7);
 	    robotDrive = new RobotDrive(leftDrive, rightDrive);
+	    
 	    shooter = new Shooter();
+	    comms = new TCPComms();
+	    comms.init();
+	    
 	    leftDrive.setVoltageRampRate(20);
 	    rightDrive.setVoltageRampRate(20);
 	    
@@ -111,10 +121,13 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic(){
-	//comms.updateTCP();
-	throttle = (supervisorControl.getRawAxis(4) *-1+1)/2;
-	shiftTriggerValue = controllerMcDeath.getRawButton(SHIFT);
+	double throttle = (supervisorControl.getRawAxis(4) *-1+1)/2;
+	boolean shiftTriggerValue = controllerMcDeath.getRawButton(SHIFT);
 	//robotDrive.tankDrive(joystickLeft.getY()*throttle, joystickRight.getY()*throttle);
+	/* If the robot is at maximum height then limit the speed of the robot to
+	 * prevent it tipping over.
+	 */
+	boolean heightLimitValue = heightLimit.get();
 	if(heightLimitValue){
 	    robotDrive.arcadeDrive(
 		    controllerMcDeath.getRawAxis(JOYSICK_MOVEMENT_Y)*0.65*0.8*throttle, 
@@ -132,7 +145,7 @@ public class RobotTemplate extends IterativeRobot {
 	    shiftDown.set(!shift);
 	}
 	previousTriggerValue=shiftTriggerValue;
-	wheelToggle = supervisorControl.getRawButton(WHEEL_TOGGLE);//controllerMcDeath.getRawButton(WHEEL_TOGGLE);
+	boolean wheelToggle = supervisorControl.getRawButton(WHEEL_TOGGLE);//controllerMcDeath.getRawButton(WHEEL_TOGGLE);
 	if (wheelToggle&&wheelToggle !=previousWheelToggle){
 	    shooter.toggle();
 	}
@@ -160,8 +173,8 @@ public class RobotTemplate extends IterativeRobot {
 	if(controllerMcDeath.getRawButton(FIRE)){
 	    shooter.fire();
 	}
-	tiltJoystick = -controllerMcDeath.getRawAxis(JOYSICK_ELEVATION);
-	tiltPotValue = tiltPot.getVoltage();
+	double tiltJoystick = -controllerMcDeath.getRawAxis(JOYSICK_ELEVATION);
+	double tiltPotValue = tiltPot.getVoltage();
 	try{
 	    if((tiltJoystick < 0 && tiltPotValue > 1.5) || 
 		    (tiltJoystick > 0 && tiltPotValue < 4.3)){
@@ -173,7 +186,7 @@ public class RobotTemplate extends IterativeRobot {
 	catch(CANTimeoutException ex){
 	    ex.printStackTrace();
 	}
-	azimuthMotorValue = controllerMcDeath.getRawAxis(JOYSTICK_AZIMUTH);
+	double azimuthMotorValue = controllerMcDeath.getRawAxis(JOYSTICK_AZIMUTH);
 	try{
 	    if (Math.abs(azimuthMotorValue) > 0.3){
 		azimuthMotor.setX(azimuthMotorValue);
@@ -184,8 +197,7 @@ public class RobotTemplate extends IterativeRobot {
 	catch(CANTimeoutException ex){
 	    ex.printStackTrace();
 	}
-	heightJoystick = controllerMcDeath.getRawAxis(DPAD_X);
-	heightLimitValue = heightLimit.get();
+	double heightJoystick = controllerMcDeath.getRawAxis(DPAD_X);
 	try {
 	    if ((heightLimitValue && heightJoystick > 0) || 
 		    heightJoystick < 0){
