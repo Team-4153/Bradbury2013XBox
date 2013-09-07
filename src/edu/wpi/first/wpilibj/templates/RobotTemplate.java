@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj.templates;
 
+import com.team4153.RobotMap;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.can.CANTimeoutException;
 /**
@@ -16,87 +17,58 @@ import edu.wpi.first.wpilibj.can.CANTimeoutException;
  * directory.
  */
 public class RobotTemplate extends IterativeRobot {
-    static final int JOYSTICK_AZIMUTH = 4;//RIGHT_ANALOG_X
-    static final int JOYSICK_ELEVATION = 5;//RIGHT_ANALOG_Y
-    static final int TRIGGERS = 3;
-    static final int JOYSTICK_MOVEMENT_X = 1;//LEFT_ANALOG_X
-    static final int JOYSICK_MOVEMENT_Y = 2;//LEFT_ANALOG_Y
-    static final int DPAD_X = 6;
-    
-    static final double ELEVATOR_SPEED_RATIO = -0.8 ;
-    
-    static final int XBOX_A = 1;
-    static final int XBOX_B = 2;
-    static final int XBOX_X = 3;
-    static final int XBOX_Y = 4;
-    static final int FIRE = 5;//LEFT_BUMPER
-    static final int SHIFT = 6;//RIGHT_BUMPER
-    static final int WHEEL_TOGGLE = 1;//BACK//No longer back, b/c it's on supervisor
-    static final int START = 8;
-    static final int LEFT_STICK_PRESS = 9;
-    static final int RIGHT_STICK_PRESS = 10;
-    
-    static final int MAIN_DRIVING_JOYSTICK = 1;
-    static final int SUPERVISOR_JOYSTICK = 2;
-    
-    
+    private static final double ELEVATOR_SPEED_RATIO = -0.8 ;
 
-    Shooter shooter;
+    // Shooter control
+    private Shooter shooter;
 
     /* Main driving controller. */
-    Joystick controllerMcDeath = new Joystick(MAIN_DRIVING_JOYSTICK);
+    private Joystick controllerMcDeath = new Joystick(RobotMap.JOYSTICK_MAIN_DRIVING);
     /* Throttle and whether the shooter wheel is running. */
-    Joystick supervisorControl = new Joystick(SUPERVISOR_JOYSTICK);
+    private Joystick supervisorControl = new Joystick(RobotMap.JOYSTICK_SUPERVISOR);
     
-    CANJaguar leftDrive;
-    CANJaguar rightDrive;
-    CANJaguar heightMotor;
-    CANJaguar tiltMotor;
-    CANJaguar azimuthMotor;
-    Compressor compressor = new Compressor(7, 2);
-    RobotDrive robotDrive;
-    Solenoid shiftUp = new Solenoid(2);
-    Solenoid shiftDown = new Solenoid (1);
-    TCPComms comms;
+    private CANJaguar leftDrive;
+    private CANJaguar rightDrive;
+    private CANJaguar heightMotor;
+    private CANJaguar tiltMotor;
+    private CANJaguar azimuthMotor;
+    private Compressor compressor = new Compressor(RobotMap.COMPRSSR_PRESSURE_SW_CHANNEL, RobotMap.COMPRSSR_RELAY_CHANNEL);
+    private RobotDrive robotDrive;
+    private Solenoid shiftUp = new Solenoid(2);
+    private Solenoid shiftDown = new Solenoid (1);
+    private TCPComms comms;
     
-    AnalogChannel tiltPot;
-    AnalogChannel rotPot;
-    DigitalInput heightLimit;
+    private AnalogChannel tiltPot;
+//    private AnalogChannel rotPot;
+    private DigitalInput heightLimit;
     
-   // double throttle;
-    //double tiltJoystick;
-    //double tiltPotValue;
-    //double heightJoystick;
-    //double azimuthMotorValue;
-    boolean shift;
-    boolean previousTriggerValue;
-    //boolean shiftTriggerValue;
-    boolean previousHeightLimitValue;
-    //boolean heightLimitValue;
-    boolean previousWheelToggle;
-    //boolean wheelToggle;
+    private boolean shift;
+    private boolean previousTriggerValue;
+    private boolean previousHeightLimitValue;
+    private boolean previousWheelToggle;
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
 	try {
-	    leftDrive = new CANJaguar(8);
-	    rightDrive = new CANJaguar(4);
-	    heightMotor = new CANJaguar(3);
-	    tiltMotor = new CANJaguar(5);
-	    azimuthMotor = new CANJaguar(7);
+	    leftDrive = new CANJaguar(RobotMap.JAG_LEFT_DRIVE);
+	    rightDrive = new CANJaguar(RobotMap.JAG_RIGHT_DRIVE);
+	    heightMotor = new CANJaguar(RobotMap.JAG_HEIGHT_MOTOR);
+	    tiltMotor = new CANJaguar(RobotMap.JAG_TILT_MOTOR);
+	    azimuthMotor = new CANJaguar(RobotMap.JAG_AZIMUTH_MOTOR);
 	    robotDrive = new RobotDrive(leftDrive, rightDrive);
 	    
 	    shooter = new Shooter();
 	    comms = new TCPComms();
 	    comms.init();
 	    
-	    leftDrive.setVoltageRampRate(20);
-	    rightDrive.setVoltageRampRate(20);
+	    leftDrive.setVoltageRampRate(20); // TODO fix magic numbers
+	    rightDrive.setVoltageRampRate(20);// TODO fix magic numbers
 	    
 	    tiltPot = new AnalogChannel(2);
-	    rotPot = new AnalogChannel(1);
+//	    rotPot = new AnalogChannel(1);
 	    heightLimit = new DigitalInput(9);
 	    
 	} catch (CANTimeoutException e) {
@@ -121,8 +93,8 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic(){
-	double throttle = (supervisorControl.getRawAxis(4) *-1+1)/2;
-	boolean shiftTriggerValue = controllerMcDeath.getRawButton(SHIFT);
+	double throttle = (supervisorControl.getRawAxis(4) *-1+1)/2;// TODO fix magic numbers
+	boolean shiftTriggerValue = controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_SHIFT);
 	//robotDrive.tankDrive(joystickLeft.getY()*throttle, joystickRight.getY()*throttle);
 	/* If the robot is at maximum height then limit the speed of the robot to
 	 * prevent it tipping over.
@@ -130,13 +102,13 @@ public class RobotTemplate extends IterativeRobot {
 	boolean heightLimitValue = heightLimit.get();
 	if(heightLimitValue){
 	    robotDrive.arcadeDrive(
-		    controllerMcDeath.getRawAxis(JOYSICK_MOVEMENT_Y)*0.65*0.8*throttle, 
-		    controllerMcDeath.getRawAxis(JOYSTICK_MOVEMENT_X)*0.7*throttle
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y)*0.65*0.8*throttle, // TODO fix this math!
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_X)*0.7*throttle// TODO fix magic numbers
 		    );
 	}else{
 	    robotDrive.arcadeDrive(
-		    controllerMcDeath.getRawAxis(JOYSICK_MOVEMENT_Y)*0.8*throttle, 
-		    controllerMcDeath.getRawAxis(JOYSTICK_MOVEMENT_X)*0.8*throttle
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y)*0.8*throttle, // TODO fix magic numbers
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_X)*0.8*throttle// TODO fix magic numbers
 		    );
 	}
 	if (shiftTriggerValue&&shiftTriggerValue!=previousTriggerValue){
@@ -145,40 +117,46 @@ public class RobotTemplate extends IterativeRobot {
 	    shiftDown.set(!shift);
 	}
 	previousTriggerValue=shiftTriggerValue;
-	boolean wheelToggle = supervisorControl.getRawButton(WHEEL_TOGGLE);//controllerMcDeath.getRawButton(WHEEL_TOGGLE);
+	//boolean wheelToggle = controllerMcDeath.getRawButton(WHEEL_TOGGLE);
+        boolean wheelToggle = supervisorControl.getRawButton(RobotMap.JOYBUTTON_WHEEL_TOGGLE);
 	if (wheelToggle&&wheelToggle !=previousWheelToggle){
 	    shooter.toggle();
 	}
 	previousWheelToggle = wheelToggle;
+        
 	shooter.update();
 	if (heightLimitValue != previousHeightLimitValue) {
 	    //System.out.println(heightLimitValue+ " " + previousHeightLimitValue);
 	    if (heightLimitValue) {
 		try {
-		    leftDrive.setVoltageRampRate(10);
-		    rightDrive.setVoltageRampRate(10);
+		    leftDrive.setVoltageRampRate(10);// TODO fix magic numbers
+		    rightDrive.setVoltageRampRate(10);// TODO fix magic numbers
 		} catch (CANTimeoutException ex) {
 		    ex.printStackTrace();
 		}
 	    } else {
 		try {
-		    leftDrive.setVoltageRampRate(20);
-		    rightDrive.setVoltageRampRate(20);
+		    leftDrive.setVoltageRampRate(20);// TODO fix magic numbers
+		    rightDrive.setVoltageRampRate(20);// TODO fix magic numbers
 		} catch (CANTimeoutException ex) {
 		    ex.printStackTrace();
 		}
 	    }
 	}
 	previousHeightLimitValue = heightLimitValue;
-	if(controllerMcDeath.getRawButton(FIRE)){
+        
+        // Shoot if requested
+	if(controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_FIRE)){
 	    shooter.fire();
 	}
-	double tiltJoystick = -controllerMcDeath.getRawAxis(JOYSICK_ELEVATION);
+        
+	double tiltJoystickValue = -controllerMcDeath.getRawAxis(RobotMap.JOYSTICK_ELEVATION);
 	double tiltPotValue = tiltPot.getVoltage();
 	try{
-	    if((tiltJoystick < 0 && tiltPotValue > 1.5) || 
-		    (tiltJoystick > 0 && tiltPotValue < 4.3)){
-		tiltMotor.setX(tiltJoystick*0.3);
+	    // TODO define what these values mean
+            if((tiltJoystickValue < 0 && tiltPotValue > 1.5) || // TODO fix magic numbers
+		    (tiltJoystickValue > 0 && tiltPotValue < 4.3)){// TODO fix magic numbers
+		tiltMotor.setX(tiltJoystickValue*0.3);// TODO fix magic numbers
 	    }else{
 		tiltMotor.setX(0);
 	    }
@@ -186,9 +164,9 @@ public class RobotTemplate extends IterativeRobot {
 	catch(CANTimeoutException ex){
 	    ex.printStackTrace();
 	}
-	double azimuthMotorValue = controllerMcDeath.getRawAxis(JOYSTICK_AZIMUTH);
+	double azimuthMotorValue = controllerMcDeath.getRawAxis(RobotMap.JOYSTICK_AZIMUTH);
 	try{
-	    if (Math.abs(azimuthMotorValue) > 0.3){
+	    if (Math.abs(azimuthMotorValue) > 0.3){// TODO fix magic numbers
 		azimuthMotor.setX(azimuthMotorValue);
 	    } else {
 		azimuthMotor.setX(0);
@@ -197,9 +175,9 @@ public class RobotTemplate extends IterativeRobot {
 	catch(CANTimeoutException ex){
 	    ex.printStackTrace();
 	}
-	double heightJoystick = controllerMcDeath.getRawAxis(DPAD_X);
+	double heightJoystick = controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DPAD_X);
 	try {
-	    if ((heightLimitValue && heightJoystick > 0) || 
+	    if ((heightLimitValue && heightJoystick > 0) || // TODO fix magic numbers
 		    heightJoystick < 0){
 		heightMotor.setX(heightJoystick* ELEVATOR_SPEED_RATIO); 
 	}else 

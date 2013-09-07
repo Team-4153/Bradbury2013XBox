@@ -4,6 +4,7 @@
  */
 package edu.wpi.first.wpilibj.templates;
 
+import com.team4153.RobotMap;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.CANJaguar.ControlMode;
 import edu.wpi.first.wpilibj.Relay;
@@ -15,23 +16,26 @@ import edu.wpi.first.wpilibj.can.CANTimeoutException;
  * @author 4153student
  */
 public class Shooter {
-    static final double SHOOTER_VOLTAGE = 7.7;//7.7
+    private static final double SHOOTER_VOLTAGE = 7.7;//7.7
 
-    Solenoid shooterRetract = new Solenoid(6);
-    Solenoid shooterExtend = new Solenoid(5);
-    Relay discRetention = new Relay(3);
-    CANJaguar shooterWheel;
-    boolean extended;
-    boolean fireable;
-    boolean wheelRun;
+    private Solenoid shooterRetract = new Solenoid(RobotMap.SHOOTER_SOLENOID_RETRACT);
+    private Solenoid shooterExtend = new Solenoid(RobotMap.SHOOTER_SOLENOID_EXTEND);
+    private Relay discRetention = new Relay(RobotMap.RELAY_DISC_RETAINER);
+    private CANJaguar shooterWheel;
+    private boolean fireable;
+    private boolean wheelRun;
 
     public Shooter() throws CANTimeoutException {
-	shooterWheel = new CANJaguar(9, ControlMode.kVoltage);
+	shooterWheel = new CANJaguar(RobotMap.JAG_SHOOTER_MOTOR, ControlMode.kVoltage);
 	shooterExtend.set(false);
 	shooterRetract.set(true);
 	fireable = true;
     }
 
+    /**
+     * This method appears to make sure the shooter wheel motor gets a setting to keep
+     * the motor running during iterative robot calls to teleopPeriodic()
+     */
     public void update() {
 	try {
 	    if (wheelRun) {
@@ -64,7 +68,7 @@ public class Shooter {
     }
 
     //Thread to handle the firing of the frisbees so as not to delay the loop
-    public class FireThread extends Thread {
+    private class FireThread extends Thread {
 
 	public void run() {
 	    discRetention.set(Relay.Value.kForward);
@@ -76,18 +80,28 @@ public class Shooter {
 
 	    shooterRetract.set(false);
 	    shooterExtend.set(true);
-	    try {
-		sleep(250);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+	    msDelay(250);
 	    reset();
-	    try {
-		sleep(1500);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    };
+	    msDelay(1500);
 	    fireable = true;
 	}
+    }
+    
+    private static void msDelay(long period)
+    {
+        if (period <= 0) return;
+        long end = System.currentTimeMillis() + period;
+        boolean interrupted = false;
+        do {
+            try {
+                Thread.sleep(period);
+            } catch (InterruptedException ie)
+            {
+                interrupted = true;
+            }
+            period = end - System.currentTimeMillis();
+        } while (period > 0);
+        if (interrupted)
+            Thread.currentThread().interrupt();
     }
 }
