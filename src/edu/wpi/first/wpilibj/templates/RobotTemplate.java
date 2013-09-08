@@ -67,9 +67,9 @@ public class RobotTemplate extends IterativeRobot {
 	    leftDrive.setVoltageRampRate(20); // TODO fix magic numbers
 	    rightDrive.setVoltageRampRate(20);// TODO fix magic numbers
 	    
-	    tiltPot = new AnalogChannel(2);
+	    tiltPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
 //	    rotPot = new AnalogChannel(1);
-	    heightLimit = new DigitalInput(9);
+	    heightLimit = new DigitalInput(RobotMap.SW_ELEVATOR_TOP_LIMIT);
 	    
 	} catch (CANTimeoutException e) {
 	    e.printStackTrace();
@@ -150,7 +150,7 @@ public class RobotTemplate extends IterativeRobot {
 	    shooter.fire();
 	}
         
-	double tiltJoystickValue = -controllerMcDeath.getRawAxis(RobotMap.JOYSTICK_ELEVATION);
+	double tiltJoystickValue = -controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_ELEVATION);
 	double tiltPotValue = tiltPot.getVoltage();
 	try{
 	    // TODO define what these values mean
@@ -164,7 +164,7 @@ public class RobotTemplate extends IterativeRobot {
 	catch(CANTimeoutException ex){
 	    ex.printStackTrace();
 	}
-	double azimuthMotorValue = controllerMcDeath.getRawAxis(RobotMap.JOYSTICK_AZIMUTH);
+	double azimuthMotorValue = controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_AZIMUTH);
 	try{
 	    if (Math.abs(azimuthMotorValue) > 0.3){// TODO fix magic numbers
 		azimuthMotor.setX(azimuthMotorValue);

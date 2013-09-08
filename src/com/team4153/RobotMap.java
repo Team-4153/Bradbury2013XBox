@@ -23,18 +23,18 @@ public class RobotMap {
     
     
     // Joysticks and axes IDs
+    // Driver
     public static final int JOYSTICK_MAIN_DRIVING = 1;
-    public static final int JOYAXIS_DRIVE_Y = 2;
-    public static final int JOYAXIS_DRIVE_X = 1;
     public static final int JOYBUTTON_SHIFT = 6;//RIGHT_BUMPER
     public static final int JOYBUTTON_FIRE =  5;//LEFT_BUMPER
+    public static final int JOYAXIS_DRIVE_Y = 2;
+    public static final int JOYAXIS_DRIVE_X = 1;
     public static final int JOYAXIS_DPAD_X = 6;
-    
+    public static final int JOYAXIS_AZIMUTH = 4;//RIGHT_ANALOG_X
+    public static final int JOYAXIS_ELEVATION = 5;//RIGHT_ANALOG_Y 
+    // Manip
     public static final int JOYSTICK_SUPERVISOR = 2;
     public static final int JOYBUTTON_WHEEL_TOGGLE = 1;//BACK//No longer back, b/c it's on supervisor TODO clarify this comment
-    
-    public static final int JOYSTICK_AZIMUTH = 4;//RIGHT_ANALOG_X
-    public static final int JOYSTICK_ELEVATION = 5;//RIGHT_ANALOG_Y 
     
     // Shooter solenoid and relay channel IDs
     public static final int SHOOTER_SOLENOID_RETRACT = 6;
@@ -52,6 +52,12 @@ public class RobotMap {
     public static final int JAG_TILT_MOTOR = 5;
     public static final int JAG_AZIMUTH_MOTOR = 7;
     public static final int JAG_SHOOTER_MOTOR = 9;
+    
+    // Limit switches
+    public static final int SW_ELEVATOR_TOP_LIMIT = 9;
+    
+    // Analog I/O
+    public static final int ANALOG_TILT_POT = 2;
     
     public RobotMap() {
         // empty constructor
