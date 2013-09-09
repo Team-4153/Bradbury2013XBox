@@ -1,7 +1,7 @@
 package com.team4153;
 
 /**
- * The RobotMap is a mapping from the ports sensors and actuators are wired into
+ * The RobotMap is a mapping from the ports, sensors and actuators that are wired 
  * to a variable name. This provides flexibility changing wiring, makes checking
  * the wiring easier and significantly reduces the number of magic numbers
  * floating around.
@@ -35,11 +35,14 @@ public class RobotMap {
     // Manip
     public static final int JOYSTICK_SUPERVISOR = 2;
     public static final int JOYBUTTON_WHEEL_TOGGLE = 1;//BACK//No longer back, b/c it's on supervisor TODO clarify this comment
+    public static final int JOYAXIS_THROTTLE = 4;// Throttle lever
     
-    // Shooter solenoid and relay channel IDs
-    public static final int SHOOTER_SOLENOID_RETRACT = 6;
-    public static final int SHOOTER_SOLENOID_EXTEND = 5;
+    // Shooter solenoid, shifter solenoid, and relay channel IDs
+    public static final int SOL_SHOOTER_RETRACT = 6;
+    public static final int SOL_SHOOTER_EXTEND = 5;
     public static final int RELAY_DISC_RETAINER = 3;
+    public static final int SOL_SHIFT_UP = 2;
+    public static final int SOL_SHIFT_DOWN = 1;
     
     // Compressor channel IDs
     public static final int COMPRSSR_PRESSURE_SW_CHANNEL = 7;
@@ -57,9 +60,7 @@ public class RobotMap {
     public static final int SW_ELEVATOR_TOP_LIMIT = 9;
     
     // Analog I/O
+    public static final int ANALOG_AZIMUTH_POT = 1;
     public static final int ANALOG_TILT_POT = 2;
     
-    public RobotMap() {
-        // empty constructor
-    }
 }

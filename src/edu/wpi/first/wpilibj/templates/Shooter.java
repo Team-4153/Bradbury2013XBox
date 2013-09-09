@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.can.CANTimeoutException;
 public class Shooter {
     private static final double SHOOTER_VOLTAGE = 7.7;//7.7
 
-    private Solenoid shooterRetract = new Solenoid(RobotMap.SHOOTER_SOLENOID_RETRACT);
-    private Solenoid shooterExtend = new Solenoid(RobotMap.SHOOTER_SOLENOID_EXTEND);
+    private Solenoid shooterRetract = new Solenoid(RobotMap.SOL_SHOOTER_RETRACT);
+    private Solenoid shooterExtend = new Solenoid(RobotMap.SOL_SHOOTER_EXTEND);
     private Relay discRetention = new Relay(RobotMap.RELAY_DISC_RETAINER);
     private CANJaguar shooterWheel;
     private boolean fireable;

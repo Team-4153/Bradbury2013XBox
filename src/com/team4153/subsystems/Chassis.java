@@ -2,6 +2,7 @@
 package com.team4153.subsystems;
 
 import com.team4153.RobotMap;
+import com.team4153.commands.HumanDrive;
 import edu.wpi.first.wpilibj.CANJaguar;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -10,56 +11,71 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * Chassis subsystem for XBox controller drive
+ * 
+ * @author KPT
  */
 public class Chassis extends Subsystem {
-    private RobotDrive drive;
+    private final static double MOTOR_RAMPING_VALUE = 20.0;
+    private static Sensors sensors = Sensors.getInstance();
+    private RobotDrive robotDrive;
     /**
      * Jaguar CAN bus motor controllers.
      */
-    private CANJaguar rightFront;
-    private CANJaguar rightRear;
-    private CANJaguar leftFront;
-    private CANJaguar leftRear;
+    private CANJaguar leftDrive;
+    private CANJaguar rightDrive;
     
     /**
-     * 
-     */
+     * Default constructor
+     */ 
     public Chassis(){
 	try {
-	    rightFront = new CANJaguar(RobotMap.JAG_RIGHT_FRONT_MOTOR);
-	    rightRear = new CANJaguar(RobotMap.JAG_RIGHT_REAR_MOTOR);
-	    leftFront = new CANJaguar(RobotMap.JAG_LEFT_FRONT_MOTOR);
-	    leftRear = new CANJaguar(RobotMap.JAG_LEFT_REAR_MOTOR);
+	    leftDrive = new CANJaguar(RobotMap.JAG_LEFT_DRIVE);
+	    rightDrive = new CANJaguar(RobotMap.JAG_RIGHT_DRIVE);
 	} catch (CANTimeoutException ex) {
-	    System.out.println("Chassis constructor CANTimeoutException: " + ex.toString());
+	    System.out.println("!** Chassis constructor CANTimeoutException: " + ex.toString());
 	    System.exit(-1);
 	}
-	drive = new RobotDrive(leftFront, leftRear, rightFront, rightRear);
-	drive.setSafetyEnabled(false);
+        this.setVoltageRampRate(MOTOR_RAMPING_VALUE);         
+        robotDrive = new RobotDrive(leftDrive, rightDrive);
+	robotDrive.setSafetyEnabled(false);
+        
     }
     
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
     public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        //eg: setDefaultCommand(new MySpecialCommand());
+        // Set the default command for the subsystem here. This command will run on startup
+        // and will always be defaulted to when no other command is running.
+        setDefaultCommand(new HumanDrive());
     }
    
 	    
     /**
-     * The command to drive mecanum via joystick and gyro angle
+     * The command to drive arcade via XBox controller and "supervisor" joystick
+     * 
      * @param stick The driver's joystick (usually via OI)
-     * @param heading The gyro angle/heading
+     * @param supervisorControl The supervisor joystick (manip?) (usually via OI) 
      */
-    public void mecanumDrive(Joystick stick, double heading){
-	double x,y,twist;
-	
-	x=stick.getX()/4.0*-1.0; // invert left-right
-	y=stick.getY()/4.0;
-	twist=stick.getTwist()/3.0;
-	System.out.println("X: " + x + " Y: " + y + " Twist: " + twist + " Angle: " + heading);
-	this.drive.mecanumDrive_Cartesian(x, y, twist, heading);
+    public void arcadeDrive(Joystick stick, Joystick supervisorControl){
+	double driveYval, driveXval;
+        double throttleRatio;
+        
+        throttleRatio = (supervisorControl.getRawAxis(RobotMap.JOYAXIS_THROTTLE) *-1+1)/2;// TODO fix/document magic numbers
+        driveXval = stick.getRawAxis(RobotMap.JOYAXIS_DRIVE_X) * throttleRatio;
+        driveYval = stick.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y) * throttleRatio;
+        
+        // Limit speed when robot is standing tall
+        boolean heightLimitValue = sensors.getHeightLimit().get();
+	if(heightLimitValue){
+	    // scale the speed down when robot is tall
+            driveXval *= 0.52;
+            driveYval *= 0.7;
+	}
+        // TODO do the "change voltageRampRate setting based on height of robot" code here
+        
+        // Command the robot to drive
+        this.robotDrive.arcadeDrive(driveYval, driveXval);
     }
 
     /**
@@ -67,7 +83,20 @@ public class Chassis extends Subsystem {
      */
     public void driveHalt() {
 	System.out.println("** driveHalt");
-	this.drive.mecanumDrive_Cartesian(0,0,0,0);
+	this.robotDrive.setLeftRightMotorOutputs(0,0);
+    }
+    
+    /**
+     * Set the voltage ramping rate for the drive motors. Set this to 0.0 to disable rate limiting.
+     * @param rate The rate in volts/sec
+     */
+    private void setVoltageRampRate(double rate){
+        try {
+            leftDrive.setVoltageRampRate(rate);
+            rightDrive.setVoltageRampRate(rate);
+        } catch (CANTimeoutException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 
