@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
- *
+ * Sensor singleton that provides access to the sensors on the robot
+ * 
  * @author KPT
  */
 public class Sensors {
@@ -28,7 +29,7 @@ public class Sensors {
     }
     
     /**
-     * Get the Sensors instance for access to sensor data.
+     * Get the Sensors instance [singleton] for access to sensor data.
      * 
      * @return the Sensor singleton
      */

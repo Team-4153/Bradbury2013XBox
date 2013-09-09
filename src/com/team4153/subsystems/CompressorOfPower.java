@@ -20,6 +20,8 @@ public class CompressorOfPower extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
+        
+        // TODO maybe try the StartCompressor command instead of in OI
     }
     
     /** Start the compressor thread
