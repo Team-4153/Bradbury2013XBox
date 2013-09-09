@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Chassis extends Subsystem {
     private final static double MOTOR_RAMPING_VALUE = 20.0;
+    // get the Sensors singleton. This gives us access to the sensors it implements
     private static Sensors sensors = Sensors.getInstance();
     private RobotDrive robotDrive;
     /**

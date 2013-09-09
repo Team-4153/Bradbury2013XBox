@@ -3,6 +3,7 @@ package com.team4153.commands;
 import com.team4153.OI;
 import com.team4153.subsystems.Chassis;
 import com.team4153.subsystems.CompressorOfPower;
+import com.team4153.subsystems.Sensors;
 import com.team4153.subsystems.Shifter;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,8 +21,7 @@ public abstract class CommandBase extends Command {
     // Create a single static instance of all of your subsystems here
     public static Chassis chassis = new Chassis();
     public static Shifter shifter = new Shifter();
-    public static CompressorOfPower compressor = new CompressorOfPower();
-    
+    public static CompressorOfPower compressor = new CompressorOfPower(); 
 
     public static void init() {
         // This MUST be here. If the OI creates Commands (which it very likely
@@ -35,7 +35,7 @@ public abstract class CommandBase extends Command {
         // calling compressor.getCompressor()) seems to take care
         // of all its own thread and driver station mode management so we start it here
         // and assume it stops when FMS et al. stops the robot.
-        compressor.getCompressor().start();
+        //compressor.getCompressor().start(); TODO if works via OI, remove this
         
         // Show what command your subsystem is running on the SmartDashboard
         SmartDashboard.putData(chassis);

@@ -2,7 +2,9 @@ package com.team4153;
 
 
 import com.team4153.commands.ShiftGear;
+import com.team4153.commands.StartCompressor;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
@@ -24,11 +26,17 @@ public class OI {
         
         // to fire a frisbee. Buttons created this way are polled by the
         // scheduler so we don't have to worry about doing that.
-        triggerButton = new JoystickButton(controllerMcDeath, RobotMap.JOYBUTTON_FIRE);
+//        triggerButton = new JoystickButton(controllerMcDeath, RobotMap.JOYBUTTON_FIRE);
 //        triggerButton.whenPressed(new ShootCommand());
         
-        // Shift gear when the button is pressed
+        // Shift gear toggle when the button is pressed
         (new JoystickButton(controllerMcDeath, RobotMap.JOYBUTTON_SHIFT)).whenPressed(new ShiftGear());
+        
+        // Start the compressor
+        // TODO verify that this acts like a self reset latch
+        InternalButton compressorStarter = new InternalButton();
+        compressorStarter.whenPressed(new StartCompressor());
+        compressorStarter.setPressed(true);
     }
 
     //// CREATING BUTTONS

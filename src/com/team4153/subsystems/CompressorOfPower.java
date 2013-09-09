@@ -22,11 +22,17 @@ public class CompressorOfPower extends Subsystem {
         //setDefaultCommand(new MySpecialCommand());
     }
     
-    /**
-     * Get the Compressor WPI class instance. It runs in its own thread.
-     * @return The Compressor object
+    /** Start the compressor thread
+     *
      */
-    public Compressor getCompressor(){
-        return compressor;
+    public void startCompressor(){
+        compressor.start();
+    }
+    
+    /**
+     * Stop the compressor thread
+     */
+    public void stopCompressor(){
+        compressor.stop();
     }
 }
