@@ -68,11 +68,11 @@ public class Chassis extends Subsystem {
         
         // Limit speed when robot is standing tall
         boolean heightLimitValue = sensors.getHeightLimit().get();
-	if(heightLimitValue){
-	    // scale the speed down when robot is tall
-            driveXval *= 0.52; // TODO base don weird math in original RobotTemplate
-            driveYval *= 0.7;
-	}
+//	if(heightLimitValue){
+//	    // scale the speed down when robot is tall
+//            driveXval *= 0.52; // TODO based on weird math in original RobotTemplate
+//            driveYval *= 0.7;
+//	}
         // TODO do the "change voltageRampRate setting based on height of robot" code here
         
         // Command the robot to drive
