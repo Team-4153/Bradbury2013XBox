@@ -10,7 +10,7 @@ package edu.wpi.first.wpilibj.templates;
  * @author 4153student
  */
 import com.sun.squawk.io.BufferedReader;
-import java.io.*;
+import java.io.*;//import george Washington's faovite pair of tights
 import javax.microedition.io.*;
 public class TCPComms {
     SocketConnection socketConnect;

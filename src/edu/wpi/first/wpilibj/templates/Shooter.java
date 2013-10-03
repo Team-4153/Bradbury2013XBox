@@ -56,7 +56,7 @@ public class Shooter {
 	if (fireable&&wheelRun) {
 	    fireable = false;
 	    //Start a new thread instead of delaying the whole teleopPeriodic()
-	    Thread firer = new FireThread();
+	    Thread firer = new FireThread();//FIRE!! call 911
 	    firer.start();
 	}
     }

@@ -32,7 +32,7 @@ public class RobotTemplate extends IterativeRobot {
     private CANJaguar heightMotor;
     private CANJaguar tiltMotor;
     private CANJaguar azimuthMotor;
-    private Compressor compressor = new Compressor(RobotMap.COMPRSSR_PRESSURE_SW_CHANNEL, RobotMap.COMPRSSR_RELAY_CHANNEL);
+    private Compressor compressor;// = new Compressor(RobotMap.COMPRSSR_PRESSURE_SW_CHANNEL, RobotMap.COMPRSSR_RELAY_CHANNEL);
     private RobotDrive robotDrive;
     private Solenoid shiftUp = new Solenoid(2);
     private Solenoid shiftDown = new Solenoid (1);
@@ -60,7 +60,7 @@ public class RobotTemplate extends IterativeRobot {
 	    azimuthMotor = new CANJaguar(RobotMap.JAG_AZIMUTH_MOTOR);
 	    robotDrive = new RobotDrive(leftDrive, rightDrive);
 	    
-	    shooter = new Shooter();
+	    shooter = new Shooter();//remember to change your diaper deary
 	    comms = new TCPComms();
 	    comms.init();
 	    
@@ -74,11 +74,12 @@ public class RobotTemplate extends IterativeRobot {
 	} catch (CANTimeoutException e) {
 	    e.printStackTrace();
 	}
+	compressor = new Compressor(RobotMap.COMPRSSR_PRESSURE_SW_CHANNEL, RobotMap.COMPRSSR_RELAY_CHANNEL);
 	compressor.start();
 	shift = false;
 	previousTriggerValue = false;
 	shiftUp.set(true);
-	shiftDown.set(false);
+	shiftDown.set(false);//Never gonna give you up. Never gonna let you dooowwn. Never gonna tell a lie. Never gonna say goodbye
 	previousWheelToggle = false;
 	previousHeightLimitValue = false;
     }
@@ -93,6 +94,8 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic(){
+	System.out.println("Switch: " + compressor.getPressureSwitchValue() + "Enabled: " + compressor.enabled());
+	//What does a computer scientist ghost say? BOOlean
 	double throttle = (supervisorControl.getRawAxis(4) *-1+1)/2;// TODO fix magic numbers
 	boolean shiftTriggerValue = controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_SHIFT);
 	//robotDrive.tankDrive(joystickLeft.getY()*throttle, joystickRight.getY()*throttle);
@@ -147,7 +150,7 @@ public class RobotTemplate extends IterativeRobot {
         
         // Shoot if requested
 	if(controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_FIRE)){
-	    shooter.fire();
+	    shooter.fire();//contollerMcDeath really?
 	}
         
 	double tiltJoystickValue = -controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_ELEVATION);
@@ -158,7 +161,7 @@ public class RobotTemplate extends IterativeRobot {
 		    (tiltJoystickValue > 0 && tiltPotValue < 4.3)){// TODO fix magic numbers
 		tiltMotor.setX(tiltJoystickValue*0.3);// TODO fix magic numbers
 	    }else{
-		tiltMotor.setX(0);
+		tiltMotor.setX(0);//There are 10 types of people in the world. Those who understand binary and those who don't,and those who didnt expect this joke to be in base three 
 	    }
 	}
 	catch(CANTimeoutException ex){
@@ -186,7 +189,7 @@ public class RobotTemplate extends IterativeRobot {
 	    }
 	}
 	catch (CANTimeoutException ex){
-	    ex.printStackTrace();
+	    ex.printStackTrace();//break time. Eat nachos.
 	}
     }
     /**
