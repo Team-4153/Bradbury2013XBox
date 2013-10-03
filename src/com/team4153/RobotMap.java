@@ -27,6 +27,7 @@ public class RobotMap {
     public static final int JOYSTICK_MAIN_DRIVING = 1;
     public static final int JOYBUTTON_SHIFT = 6;//RIGHT_BUMPER
     public static final int JOYBUTTON_FIRE =  5;//LEFT_BUMPER
+    public static final int JOYBUTTON_SHOOTER_SPIN =  4;//Yellow "Y"
     public static final int JOYAXIS_DRIVE_Y = 2;
     public static final int JOYAXIS_DRIVE_X = 1;
     public static final int JOYAXIS_DPAD_X = 6;

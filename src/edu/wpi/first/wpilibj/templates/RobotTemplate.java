@@ -64,8 +64,8 @@ public class RobotTemplate extends IterativeRobot {
 	    comms = new TCPComms();
 	    comms.init();
 	    
-	    leftDrive.setVoltageRampRate(20); // TODO fix magic numbers
-	    rightDrive.setVoltageRampRate(20);// TODO fix magic numbers
+	    leftDrive.setVoltageRampRate(40); // TODO fix magic numbers
+	    rightDrive.setVoltageRampRate(40);// TODO fix magic numbers
 	    
 	    tiltPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
 //	    rotPot = new AnalogChannel(1);
@@ -94,7 +94,7 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic(){
-	System.out.println("Switch: " + compressor.getPressureSwitchValue() + "Enabled: " + compressor.enabled());
+	//System.out.println("Switch: " + compressor.getPressureSwitchValue() + "Enabled: " + compressor.enabled());
 	//What does a computer scientist ghost say? BOOlean
 	double throttle = (supervisorControl.getRawAxis(4) *-1+1)/2;// TODO fix magic numbers
 	boolean shiftTriggerValue = controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_SHIFT);
@@ -105,13 +105,13 @@ public class RobotTemplate extends IterativeRobot {
 	boolean heightLimitValue = heightLimit.get();
 	if(heightLimitValue){
 	    robotDrive.arcadeDrive(
-		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y)*0.65*0.8*throttle, // TODO fix this math!
-		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_X)*0.7*throttle// TODO fix magic numbers
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y)*0.65, //*0.8*throttle, // TODO fix this math!
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_X)*0.7 //*throttle// TODO fix magic numbers
 		    );
 	}else{
 	    robotDrive.arcadeDrive(
-		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y)*0.8*throttle, // TODO fix magic numbers
-		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_X)*0.8*throttle// TODO fix magic numbers
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y)*0.8, //*throttle, // TODO fix magic numbers
+		    controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DRIVE_X)*0.8 //*throttle// TODO fix magic numbers
 		    );
 	}
 	if (shiftTriggerValue&&shiftTriggerValue!=previousTriggerValue){
@@ -121,7 +121,8 @@ public class RobotTemplate extends IterativeRobot {
 	}
 	previousTriggerValue=shiftTriggerValue;
 	//boolean wheelToggle = controllerMcDeath.getRawButton(WHEEL_TOGGLE);
-        boolean wheelToggle = supervisorControl.getRawButton(RobotMap.JOYBUTTON_WHEEL_TOGGLE);
+        //boolean wheelToggle = supervisorControl.getRawButton(RobotMap.JOYBUTTON_WHEEL_TOGGLE);
+	boolean wheelToggle = controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_SHOOTER_SPIN);
 	if (wheelToggle&&wheelToggle !=previousWheelToggle){
 	    shooter.toggle();
 	}
