@@ -36,6 +36,8 @@ public class RobotTemplate extends IterativeRobot {
     private RobotDrive robotDrive;
     private Solenoid shiftUp = new Solenoid(2);
     private Solenoid shiftDown = new Solenoid (1);
+    private AnalogChannel rotationalPotentiometer;
+    private PIDController azimuthController;
     private TCPComms comms;
     
     private AnalogChannel tiltPot;
@@ -74,6 +76,8 @@ public class RobotTemplate extends IterativeRobot {
 	} catch (CANTimeoutException e) {
 	    e.printStackTrace();
 	}
+	rotationalPotentiometer = new AnalogChannel(1);
+	azimuthController = new PIDController(1,0,0,rotationalPotentiometer,azimuthMotor,50);
 	compressor = new Compressor(RobotMap.COMPRSSR_PRESSURE_SW_CHANNEL, RobotMap.COMPRSSR_RELAY_CHANNEL);
 	compressor.start();
 	shift = false;
@@ -168,16 +172,24 @@ public class RobotTemplate extends IterativeRobot {
 	catch(CANTimeoutException ex){
 	    ex.printStackTrace();
 	}
-	double azimuthMotorValue = controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_AZIMUTH);
-	try{
-	    if (Math.abs(azimuthMotorValue) > 0.3){// TODO fix magic numbers
-		azimuthMotor.setX(azimuthMotorValue);
-	    } else {
-		azimuthMotor.setX(0);
+	if(!controllerMcDeath.getRawButton(RobotMap.JOYBUTTON_TURRET_PID)){
+	    azimuthController.disable();
+	    double azimuthMotorValue = controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_AZIMUTH);
+	    try{
+		if (Math.abs(azimuthMotorValue) > 0.3){// TODO fix magic numbers
+		    azimuthMotor.setX(azimuthMotorValue);
+		} else {
+		    azimuthMotor.setX(0);
+		}
 	    }
-	}
-	catch(CANTimeoutException ex){
-	    ex.printStackTrace();
+	    catch(CANTimeoutException ex){
+		ex.printStackTrace();
+	    }
+	} else {
+	    //System.out.println(rotationalPotentiometer.getVoltage());
+	    azimuthController.setSetpoint(-190);
+	    System.out.println("E:"+azimuthController.getError()+" Out:"+azimuthController.get()+" Set:"+azimuthController.getSetpoint());
+	    azimuthController.enable();
 	}
 	double heightJoystick = controllerMcDeath.getRawAxis(RobotMap.JOYAXIS_DPAD_X);
 	try {
@@ -197,5 +209,6 @@ public class RobotTemplate extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
+	
     }
 }
