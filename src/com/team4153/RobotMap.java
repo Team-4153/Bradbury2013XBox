@@ -57,7 +57,8 @@ public class RobotMap {
     public static final int JAG_SHOOTER_MOTOR = 9;
     
     // Limit switches
-    public static final int SW_ELEVATOR_TOP_LIMIT = 9;
+    public static final int SW_ELEVATOR_MIDDEL_LIMIT=8;
+    public static final int SW_ELEVATOR_BOTTOM_LIMIT=9;
     
     // Analog I/O
     public static final int ANALOG_AZIMUTH_POT = 1;

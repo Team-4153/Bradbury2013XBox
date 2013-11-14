@@ -62,12 +62,13 @@ public class Chassis extends Subsystem {
 	double driveYval, driveXval;
         double throttleRatio;
         
-        throttleRatio = (supervisorControl.getRawAxis(RobotMap.JOYAXIS_THROTTLE) *-1+1)/2;// TODO fix/document magic numbers
+        //throttleRatio = (supervisorControl.getRawAxis(RobotMap.JOYAXIS_THROTTLE) *-1+1)/2;// TODO fix/document magic numbers
+	throttleRatio = 1;
         driveXval = stick.getRawAxis(RobotMap.JOYAXIS_DRIVE_X) * throttleRatio;
         driveYval = stick.getRawAxis(RobotMap.JOYAXIS_DRIVE_Y) * throttleRatio;
         
         // Limit speed when robot is standing tall
-        boolean heightLimitValue = sensors.getHeightLimit().get();
+        boolean heightLimitValue = sensors.getHeightLimitBottom().get();
 	if(heightLimitValue){
 	    // scale the speed down when robot is tall
             driveXval *= 0.52;
