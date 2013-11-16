@@ -18,7 +18,7 @@ public abstract class CommandBase extends Command {
     // Create a single static instance of all of your subsystems here
     public static Chassis chassis = new Chassis();
     public static Shifter shifter = new Shifter();
-    public static CompressorOfPower compressor = new CompressorOfPower(); 
+    public static CompressorOfPower compressor = new CompressorOfPower();
     public static TurretHead turretHead = new TurretHead();
     public static Elevator elevator = new Elevator();
 
