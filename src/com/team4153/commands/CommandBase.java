@@ -1,10 +1,7 @@
 package com.team4153.commands;
 
 import com.team4153.OI;
-import com.team4153.subsystems.Chassis;
-import com.team4153.subsystems.CompressorOfPower;
-import com.team4153.subsystems.Sensors;
-import com.team4153.subsystems.Shifter;
+import com.team4153.subsystems.*;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,6 +19,8 @@ public abstract class CommandBase extends Command {
     public static Chassis chassis = new Chassis();
     public static Shifter shifter = new Shifter();
     public static CompressorOfPower compressor = new CompressorOfPower(); 
+    public static TurretHead turretHead = new TurretHead();
+    public static Elevator elevator = new Elevator();
 
     public static void init() {
         // This MUST be here. If the OI creates Commands (which it very likely
