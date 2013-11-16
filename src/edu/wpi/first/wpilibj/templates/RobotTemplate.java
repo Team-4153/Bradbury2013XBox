@@ -71,7 +71,7 @@ public class RobotTemplate extends IterativeRobot {
 	    
 	    tiltPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
 //	    rotPot = new AnalogChannel(1);
-	    heightLimit = new DigitalInput(RobotMap.SW_ELEVATOR_TOP_LIMIT);
+	    heightLimit = new DigitalInput(RobotMap.SW_ELEVATOR_BOTTOM_LIMIT);
 	    
 	} catch (CANTimeoutException e) {
 	    e.printStackTrace();
