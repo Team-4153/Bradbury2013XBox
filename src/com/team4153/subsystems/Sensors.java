@@ -18,14 +18,16 @@ public class Sensors {
     
     private AnalogChannel tiltPot;
     private AnalogChannel azimuthPot;
-    private DigitalInput heightLimit;
+    private DigitalInput heightLimitBottom;
+    private DigitalInput heightLimitMiddel;
     
     private Sensors() {
         // private to inhibit instantiation by any other (except via reflection)
         	    
 	tiltPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
         azimuthPot = new AnalogChannel(RobotMap.ANALOG_AZIMUTH_POT);
-        heightLimit = new DigitalInput(RobotMap.SW_ELEVATOR_TOP_LIMIT);
+        heightLimitBottom = new DigitalInput(RobotMap.SW_ELEVATOR_BOTTOM_LIMIT);
+	heightLimitMiddel = new DigitalInput(RobotMap.SW_ELEVATOR_MIDDEL_LIMIT);
     }
     
     /**
@@ -55,9 +57,17 @@ public class Sensors {
     
     /**
      *
-     * @return The elevator height limit switch DigitalInput object
+     * @return The elevator height limit bottom switch DigitalInput object
      */
-    public DigitalInput getHeightLimit() {
-        return heightLimit;
+    public DigitalInput getHeightLimitBottom() {
+        return heightLimitBottom;
+    }
+    
+    /**
+     *
+     * @return The elevator height limit middel switch DigitalInput object
+     */
+    public DigitalInput getHeightLimitMiddel() {
+        return heightLimitMiddel;
     }
 }
