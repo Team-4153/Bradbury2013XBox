@@ -3,6 +3,7 @@ package com.team4153;
 
 import com.team4153.commands.ShiftGear;
 import com.team4153.commands.StartCompressor;
+import com.team4153.commands.HumanShooterWheel;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -31,6 +32,7 @@ public class OI {
         
         // Shift gear toggle when the button is pressed
         (new JoystickButton(controllerMcDeath, RobotMap.JOYBUTTON_SHIFT)).whenPressed(new ShiftGear());
+        (new JoystickButton(controllerMcDeath,RobotMap.JOYBUTTON_WHEEL_TOGGLE)).whenPressed(new HumanShooterWheel());
         
         // Start the compressor
         // TODO verify that this acts like a self reset latch

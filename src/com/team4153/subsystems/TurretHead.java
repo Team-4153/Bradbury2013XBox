@@ -27,13 +27,13 @@ public class TurretHead extends Subsystem {
 
     private CANJaguar pitchMotor;
     private CANJaguar yawMotor;
-    private AnalogChannel pitchPot;
+    //private AnalogChannel pitchPot;
     
     public TurretHead (){
         try{
             yawMotor = new CANJaguar(RobotMap.JAG_AZIMUTH_MOTOR);
             pitchMotor = new CANJaguar(RobotMap.JAG_TILT_MOTOR);
-            pitchPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
+            //pitchPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
         } catch (CANTimeoutException ex) {
 	    System.out.println("!** TurretHead constructor CANTimeoutException: " + ex.toString());
 	    System.exit(-1);
@@ -49,7 +49,7 @@ public class TurretHead extends Subsystem {
     */
     public void turretDrive(double pitchJoystickValue, double yawMotorValue){
         
-	double pitchPotValue = pitchPot.getVoltage();
+	double pitchPotValue = Sensors.getInstance().getTiltPot().getVoltage();
 	try{
 	    // TODO define what these values mean
             if((pitchJoystickValue < 0 && pitchPotValue > 1.5) || // TODO fix magic numbers

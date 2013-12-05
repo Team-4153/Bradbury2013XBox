@@ -21,6 +21,7 @@ public abstract class CommandBase extends Command {
     public static CompressorOfPower compressor = new CompressorOfPower();
     public static TurretHead turretHead = new TurretHead();
     public static Elevator elevator = new Elevator();
+    public static ShooterWheel shooterWheel=new ShooterWheel();
 
     public static void init() {
         // This MUST be here. If the OI creates Commands (which it very likely

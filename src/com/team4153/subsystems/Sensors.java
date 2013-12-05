@@ -26,8 +26,8 @@ public class Sensors {
         	    
 	tiltPot = new AnalogChannel(RobotMap.ANALOG_TILT_POT);
         azimuthPot = new AnalogChannel(RobotMap.ANALOG_AZIMUTH_POT);
-        heightLimitBottom = new DigitalInput(RobotMap.SW_ELEVATOR_BOTTOM_LIMIT);
-	heightLimitMiddel = new DigitalInput(RobotMap.SW_ELEVATOR_MIDDEL_LIMIT);
+        heightLimitBottom = new DigitalInput(RobotMap.SW_ELEVATOR_BOTTOM_LIMIT);//Pressed=false
+	heightLimitMiddel = new DigitalInput(RobotMap.SW_ELEVATOR_MIDDEL_LIMIT);//Pressed=false
     }
     
     /**

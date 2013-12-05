@@ -33,11 +33,12 @@ public class Elevator extends Subsystem {
     }
     
     public void elevate(double power){
-	try{
-	    if(Sensors.getInstance().getHeightLimitBottom().get() && power < 0){
+	boolean switchVal=!Sensors.getInstance().getHeightLimitBottom().get();
+        try{
+	    if(switchVal && power < 0){
 		motor.setX(0);
 	    }else{
-		motor.setX(power);
+		motor.setX(power * 0.7); //TODO take out scaling factor after testing
 	    }
 	}catch(CANTimeoutException ex){
 	    ex.printStackTrace();
